@@ -5,7 +5,7 @@ CREATE TABLE products (
 	item_id int not null auto_increment,
     product_name varchar(50) not null,
     department_name varchar(50) not null,
-    price DECIMAL not null,
+    price DECIMAL(5,2) not null,
     stock_quantity int not null,
     primary key(item_id)
 );
@@ -23,7 +23,7 @@ VALUES ("laptop", "electronics", 799.99, 30);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("crackers", "foods", 1.19, 33);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("shower curtain", "bathroom", 3.29, 8);
+VALUES ("shower curtain", "bathroom", 3.49, 8);
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("water bottle", "all", 15.99, 11);
 INSERT INTO products (product_name, department_name, price, stock_quantity)

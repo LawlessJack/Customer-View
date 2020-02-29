@@ -27,16 +27,18 @@ function database() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
         for (var i = 0; i < res.length; i++) {
-            console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + " | " + res[i].price + " | " + res[i].stock_quantity);
+            console.log("item id: "+res[i].item_id +  " | product name: " + res[i].product_name +  " | price: " + res[i].price);
         }
         console.log("-----------------------------------");
         bamazon()
+    
     });
 
 }
 
 function bamazon() {
-    // prompt for info about the item being put up for auction
+    connection.query("SELECT * FROM products", function (err, res) {
+        if (err) throw err;
     inquirer
         .prompt([
             {
@@ -52,22 +54,34 @@ function bamazon() {
 
         ])
         .then(function (answer) {
-            connection.query("SELECT * FROM products", function (err, res) {
-                if (err) throw err;
-                let thingy = res[(answer.item - 1)]
-                console.log(thingy.stock_quantity);
-                if (thingy.stock_quantity >= answer.quantity) {
-                    var sqlupdate = "UPDATE products SET stock_quantity = stock_quantity-answer.quantity WHERE item_id = answer.item";
-                    connection.query(sqlupdate, function (err, result) {
+                let chosenitem = res[(answer.item - 1)]
+                console.log(chosenitem.stock_quantity);
+
+                var newstockquantity = chosenitem.stock_quantity-answer.quantity
+
+                if (chosenitem.stock_quantity >= answer.quantity) {
+                    connection.query(
+                        "UPDATE products SET ? WHERE ?",
+                    [
+                      {
+                        stock_quantity: newstockquantity
+                      },
+                      {
+                        item_id: answer.item
+                      }
+                    ],
+                    function (err, result) {
                         if (err) throw err;
                         console.log(result.affectedRows + " record(s) updated");
                     });
-                    console.log("Cost of purchase: " + answer.quantity * thingy.price)
+                    console.log("Cost of purchase: " + answer.quantity * chosenitem.price)
+                    
+                    
                 }
                 else {
                     console.log("Insufficient quantity!")
                 }
-                connection.end();
+                connection.end()
             });
         })
 }
