@@ -27,17 +27,15 @@ function database() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
         for (var i = 0; i < res.length; i++) {
-            let quantity = res[i].stock_quantity;
-            let itemID = res[i].item_id;
             console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + " | " + res[i].price + " | " + res[i].stock_quantity);
         }
         console.log("-----------------------------------");
-        bamazon(quantity)
+        bamazon()
     });
-    
+
 }
 
-function bamazon(quantityhold) {
+function bamazon() {
     // prompt for info about the item being put up for auction
     inquirer
         .prompt([
@@ -53,16 +51,23 @@ function bamazon(quantityhold) {
             },
 
         ])
-      .then(function(answer) {
-        // when finished prompting, insert a new item into the db with that info
-
-        if (answer.quantity <= quantityhold){
-            console.log("it works!")
-        }
-        else{
-            console.log(quantityhold)
-        }
-          
-        connection.end()
-      });
+        .then(function (answer) {
+            connection.query("SELECT * FROM products", function (err, res) {
+                if (err) throw err;
+                let thingy = res[(answer.item - 1)]
+                console.log(thingy.stock_quantity);
+                if (thingy.stock_quantity >= answer.quantity) {
+                    var sqlupdate = "UPDATE products SET stock_quantity = stock_quantity-answer.quantity WHERE item_id = answer.item";
+                    connection.query(sqlupdate, function (err, result) {
+                        if (err) throw err;
+                        console.log(result.affectedRows + " record(s) updated");
+                    });
+                    console.log("Cost of purchase: " + answer.quantity * thingy.price)
+                }
+                else {
+                    console.log("Insufficient quantity!")
+                }
+                connection.end();
+            });
+        })
 }
