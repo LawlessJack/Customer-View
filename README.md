@@ -7,4 +7,4 @@ This app checks the linked database and shows you the products, their price, and
 To run the app npm install mysql, and inquirer to get the required packages.
 I(Jack Lawless) was the sole developer for this project
 
-Deployed link https://soblique.github.io/Customer-View
+Deployed link https://soblique.github.io/Customer-View/
