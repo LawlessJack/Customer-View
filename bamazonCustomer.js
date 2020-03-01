@@ -55,7 +55,7 @@ function bamazon() {
         ])
         .then(function (answer) {
                 let chosenitem = res[(answer.item - 1)]
-                console.log(chosenitem.stock_quantity);
+                console.log("stock quantity: " + chosenitem.stock_quantity);
 
                 var newstockquantity = chosenitem.stock_quantity-answer.quantity
 
